@@ -12,19 +12,20 @@ $('#create-board').click(function() {
 function generateBoard(boardSize) {
   const rowCount = boardSize[0];
   const columnCount = boardSize[1]; // 65
-  const board = [];
+  const board = {};
   for (let i = 1; i <= columnCount; i++) {
-    let boardRow = [];
     $('#playing-board').append(`<div id="row${i}" class="row"></div>`);
     for (let j = 0; j < rowCount; j++) {
       const charCode = String.fromCharCode(65 + j);
-      boardRow.push(`[${charCode}${i}, ${null}]`);
+      // Add cell id to the board object, setting its value to null
+      board[`${charCode}${i}`] = null;
+      // Add cell div to the DOM
       $(`#row${i}`).append(`<div id="${charCode}${i}" class="cell"></div>`);
+      // Add onclick handler to each cell
       $(`#${charCode}${i}`).click(function() {
         cellClicked(`${charCode}${i}`);
       });
     }
-    board.push(boardRow);
   }
   console.log(board);
   playingBoard = board;
