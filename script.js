@@ -29,9 +29,32 @@ function generateBoard(boardSize) {
   }
   console.log(board);
   playingBoard = board;
+  cells = document.querySelectorAll('.cell'); 
+  console.log(cells);
+  resetShips();
 }
 
 function cellClicked(cell) {
   $(`#${cell}`).css('background-color', 'red');
+  playingBoard[cell] = 'x';
   console.log(cell + ' clicked');
+  console.log(playingBoard);
+}
+
+function resetShips() {
+  for (let i = 1; i <= 3; i++) {
+    $('#ship-area').append(`<div id="ship${i}" class="ships"></div>`);
+    $(`#ship${i}`).draggable({
+      grid: [ 50, 50 ],
+      stop: function( event, ui ) {
+        const top = ui.offset.top;
+        const left = ui.offset.left
+        for (var i in cells) {
+          if (cells[i].offsetTop === top && cells[i].offsetLeft === left) {
+            console.log(cells[i]);
+          }
+        }
+      }
+    });
+  }
 }
