@@ -30,7 +30,6 @@ function generateBoard(boardSize) {
   console.log(board);
   playingBoard = board;
   cells = document.querySelectorAll('.cell'); 
-  console.log(cells);
   resetShips();
 }
 
@@ -43,18 +42,36 @@ function cellClicked(cell) {
 
 function resetShips() {
   for (let i = 1; i <= 3; i++) {
+    const ship = `#ship${i}`;
     $('#ship-area').append(`<div id="ship${i}" class="ships"></div>`);
-    $(`#ship${i}`).draggable({
+    $(`${ship}`).draggable({
       grid: [ 50, 50 ],
       stop: function( event, ui ) {
-        const top = ui.offset.top;
-        const left = ui.offset.left
-        for (var i in cells) {
-          if (cells[i].offsetTop === top && cells[i].offsetLeft === left) {
-            console.log(cells[i]);
-          }
-        }
+        detectCellsUnderShips(ship, ui);
       }
     });
   }
+}
+
+function detectCellsUnderShips(ship, ui) {
+  const shipSize = ship.slice(-1);
+  const top = ui.offset.top;
+  const left = ui.offset.left;
+  let coords = [[top, left]];
+
+  for (var i = 1; i <= shipSize; i++) {
+    // If ships are horizontal
+    coords.push([top, left + (50 * i)]);
+    // If ships are vertical
+    // coords.push([top + (50 * i), left]);
+  }
+  let overlappingCells = [];
+  for (var j of coords) {
+    for (var k in cells) {
+      if (j[0] === cells[k].offsetTop && j[1] === cells[k].offsetLeft) {
+        overlappingCells.push(cells[k].id);
+      }
+    }
+  }
+  console.log(overlappingCells);
 }
