@@ -47,23 +47,33 @@ function resetShips() {
     $(`${ship}`).draggable({
       grid: [ 50, 50 ],
       stop: function( event, ui ) {
-        detectCellsUnderShips(ship, ui);
+        const top = ui.offset.top;
+        const left = ui.offset.left;
+        detectCellsUnderShips(ship, top, left);
       }
+    }).click(function() {
+      $(this).toggleClass('rotated');
+      const top = $(ship).offset().top;
+      const left = $(ship).offset().left;
+      detectCellsUnderShips(ship, top, left);
     });
   }
 }
 
-function detectCellsUnderShips(ship, ui) {
+function detectCellsUnderShips(ship, top, left) {
   const shipSize = ship.slice(-1);
-  const top = ui.offset.top;
-  const left = ui.offset.left;
+  // const top = top;
+  // const left = left;
   let coords = [[top, left]];
 
   for (var i = 1; i <= shipSize; i++) {
-    // If ships are horizontal
-    coords.push([top, left + (50 * i)]);
     // If ships are vertical
-    // coords.push([top + (50 * i), left]);
+    if ($(ship).hasClass('rotated')) {
+      coords.push([top + (50 * i), left]);
+    } else {
+    // If ships are horizontal
+      coords.push([top, left + (50 * i)]);
+    }
   }
   let overlappingCells = [];
   for (var j of coords) {
